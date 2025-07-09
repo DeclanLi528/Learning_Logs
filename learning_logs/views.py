@@ -25,8 +25,7 @@ def topic(request, topic_id):
     """Show a single topic and all its entries."""
     topic = Topic.objects.get(id=topic_id)
     # Make sure the topic belongs to the current user.
-    if topic.owner != request.user:
-        raise Http404
+    check_topic_owner(topic, request)
 
     entries = topic.entry_set.order_by(
         "-date_added")  # Use shell to test first
@@ -80,8 +79,7 @@ def new_entry(request, topic_id):
 def edit_entry(request, entry_id):
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
-    if topic.owner != request.user:
-        raise Http404
+    check_topic_owner(topic, request)
 
     if request.method != "POST":
         form = EntryForm(instance=entry)  # 这里的argument会产生一个有老data的form
@@ -93,3 +91,8 @@ def edit_entry(request, entry_id):
 
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learning_logs/edit_entry.xhtml', context)
+
+
+def check_topic_owner(topic, request):
+    if topic.owner != request.user:
+        raise Http404
