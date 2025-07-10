@@ -1,13 +1,20 @@
 {%extends 'learning_logs/base.xhtml'%}
+{%block page_header%}
+<h1>Topics</h1>
+{%endblock page_header%}
+
 {%block content%}
-<p>Topics</p>
-<ul>
+
+<ul class="list-group border-bottom pb-2 mb-4">
+
     {%for topic in topics%}
-    <li><a href="{% url 'learning_logs:topic' topic.id %}">
+    <li class="list-group-item border-0"> <!--list-group-item自带padding所以看起来是有上下间距的-->
+        <a href="{% url 'learning_logs:topic' topic.id %}">
             {{topic.text}}
-        </a></li>
+        </a>
+    </li>
     {% empty %}
-    <li>No topics have been added yet.</li>
+    <li class="list-group-item border-0">No topics have been added yet.</li>
     {% endfor %}
 </ul>
 
